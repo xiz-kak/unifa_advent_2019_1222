@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2                    # 仮想環境にrepositoryをチェックアウトするおまじない。デフォルトは `master` ブランチ。
     - name: FTP-To-Sakura                          # job stepの名前。ログに出力される。わかればなんでも良さそう。    
-      run: curl -u $FTP_USERNAME:$FTP_PASSWORD --ftp-ssl --ftp-pasv -T hello.html ftp://$FTP_SERVER:21/www/
+      uses: SamKirkland/FTP-Deploy-Action@2.0.0    # FTP-Deploy-Action というサーバーにFTPするアクションを使わせてもらいます。
       env:
         FTP_SERVER: ${{ secrets.FTP_SERVER }}      # 環境変数：レンタルサーバーのパス
         FTP_USERNAME: ${{ secrets.FTP_USERNAME }}  # 環境変数：FTPユーザー名
