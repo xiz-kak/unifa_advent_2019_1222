@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest                         # jobを実行する仮想環境。 `windows` や `macOS` も選択可能。
     steps:
     - uses: actions/checkout@v2                    # 仮想環境にrepositoryをチェックアウトするおまじない。デフォルトは `master` ブランチ。
-    - name: FTP-To-Sakura                          # job stepの名前。ログに出力される。わかればなんでも良さそう。
-      uses: SamKirkland/FTP-Deploy-Action@2.0.0    # FTP-Deploy-Action というサーバーにFTPするアクションを使わせてもらいます。
+    - name: install lftp                           # lftpをインストール
+      run: sudo apt-get update && sudo apt-get install -y lftp
+    - name: FTP-To-Sakura                          # job stepの名前。ログに出力される。わかればなんでも良さそう。    
+      run: lftp ftp://$FTP_SERVER:21 -u $FTP_USERNAME,$FTP_PASSWORD -e "set net:max-retries 10;set ftp:ssl-allow no; mirror -v -R -x .git . .; quit"
       env:
         FTP_SERVER: ${{ secrets.FTP_SERVER }}      # 環境変数：レンタルサーバーのパス
         FTP_USERNAME: ${{ secrets.FTP_USERNAME }}  # 環境変数：FTPユーザー名
         FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}  # 環境変数：FTPパスワード
-        METHOD: sftp                               # ftp (default) / sftp
-        PORT: 22                                   # FTPサーバーのポート。ftp -> 21 (default) / sftp -> 22
