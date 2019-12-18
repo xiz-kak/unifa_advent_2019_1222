@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Publish Website
+
+jobs:
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action                        # jobの名前。ログに出力される。わかればなんでも良さそう。
+    runs-on: ubuntu-latest                         # jobを実行する仮想環境。 `windows` や `macOS` も選択可能。
+    steps:
+    - uses: actions/checkout@v2                    # 仮想環境にrepositoryをチェックアウトするおまじない。デフォルトは `master` ブランチ。
+    - name: FTP-To-Sakura                          # job stepの名前。ログに出力される。わかればなんでも良さそう。
+      uses: SamKirkland/FTP-Deploy-Action@2.0.0    # FTP-Deploy-Action というサーバーにFTPするアクションを使わせてもらいます。
+      env:
+        FTP_SERVER: ${{ secrets.FTP_SERVER }}      # 環境変数：レンタルサーバーのパス
+        FTP_USERNAME: ${{ secrets.FTP_USERNAME }}  # 環境変数：FTPユーザー名
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}  # 環境変数：FTPパスワード
